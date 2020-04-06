@@ -13,7 +13,7 @@ const char* password = ".................."; // Wifi Password
 const char* username = "................."; // my AskSensors username
 const char* pubTopic = "publish/..../....."; // publish/username/apiKeyIn
 
-const unsigned int writeInterval = 1000;   // write interval (in ms)
+const unsigned int writeInterval = 2000;   // write interval (in ms)
 //AskSensors MQTT config
 const char* mqtt_server = "mqtt.asksensors.com";
 unsigned int mqtt_port = 1883;
@@ -21,6 +21,7 @@ unsigned int mqtt_port = 1883;
 // KY039 defines
 #define TAB_LENGTH        4
 #define RISE_THRESHOLD  5
+#define CALIB_OFFSET  0 // change this offset after calibration
 
 WiFiClient askClient;
 PubSubClient client(askClient);
@@ -94,7 +95,7 @@ void loop() {
         first = millis() - last_beat;
         last_beat = millis();
         // Calculate the weighed average of heartbeat rate according to the three last beats
-        KY039_data = 60000. / (0.4 * first + 0.3 * second + 0.3 * third);
+        KY039_data = 60000. / (0.4 * first + 0.3 * second + 0.3 * third)+ CALIB_OFFSET;
         Serial.print(KY039_data);
         Serial.println(" BPM\n"); // Unit
         third = second;
